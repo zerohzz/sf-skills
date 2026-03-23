@@ -506,17 +506,24 @@ public class UnitOfWork {
     }
 
     public void commitWork() {
+        // NOTE: Salesforce limits Savepoints — each setSavepoint() counts as a DML statement
+        // (against the 150 DML limit). Nested savepoints are supported but consume DML budget.
+        // For production use, consider fflib_SObjectUnitOfWork which optimizes DML ordering.
         Savepoint sp = Database.setSavepoint();
         try {
-            insert newRecords;
-            update dirtyRecords;
-            delete deletedRecords;
+            if (!newRecords.isEmpty()) insert newRecords;
+            if (!dirtyRecords.isEmpty()) update dirtyRecords;
+            if (!deletedRecords.isEmpty()) delete deletedRecords;
         } catch (Exception e) {
             Database.rollback(sp);
             throw e;
         }
     }
 }
+
+// RECOMMENDED: For production use, prefer fflib_SObjectUnitOfWork from the
+// Apex Enterprise Patterns library (https://github.com/apex-enterprise-patterns/fflib-apex-common)
+// which handles DML ordering, relationship resolution, and governor limit optimization.
 ```
 
 ### Usage
@@ -709,8 +716,8 @@ public class AccountTriggerHandler {
 }
 ```
 
-### Platform Events Alternative
-For decoupled, async observers, use Platform Events:
+### Platform Events: The Salesforce-Native Observer Pattern
+**Platform Events are the preferred approach** for decoupled, async observers on Salesforce. They survive transaction rollbacks, support retry, and decouple publishers from subscribers:
 
 ```apex
 // Publish event
@@ -756,8 +763,14 @@ public class UpdateFieldCommand implements Command {
 
     public void execute() {
         // Store old value for undo
+        // SECURITY: Validate fieldName against schema to prevent SOQL injection
+        Map<String, Schema.SObjectField> fieldMap = objectType.getDescribe().fields.getMap();
+        if (!fieldMap.containsKey(fieldName.toLowerCase())) {
+            throw new IllegalArgumentException('Invalid field: ' + fieldName);
+        }
+
         SObject record = Database.query(
-            'SELECT ' + fieldName + ' FROM ' + objectType + ' WHERE Id = :recordId'
+            'SELECT ' + String.escapeSingleQuotes(fieldName) + ' FROM ' + objectType + ' WHERE Id = :recordId'
         );
         this.oldValue = record.get(fieldName);
 
@@ -1178,17 +1191,28 @@ private void syncToExternalCRM(Account account) {
 
 ## Pattern Selection Guide
 
-| Need | Pattern |
-|------|---------|
-| Centralize object creation | Factory |
-| Abstract data access | Repository / Selector |
-| Build complex objects | Builder |
-| Single cached instance | Singleton |
-| Interchangeable algorithms | Strategy |
-| Transactional DML | Unit of Work |
-| Add behavior without modification | Decorator |
-| React to state changes | Observer |
-| Queue/undo operations | Command |
-| Simplify complex systems | Facade |
-| Encapsulate business rules | Domain Class |
-| Consistent method structure | Abstraction Levels |
+| Need | Pattern | Salesforce Context |
+|------|---------|-------------------|
+| Centralize object creation | Factory | Use `@TestVisible` + Apex Stub API for mocking |
+| Abstract data access | Repository / Selector | fflib Selector pattern; use `WITH USER_MODE` |
+| Build complex objects | Builder | Test Data Factories; dynamic SOQL builders |
+| Single cached instance | Singleton | Cache Custom Metadata; mind static variable transaction lifecycle |
+| Interchangeable algorithms | Strategy | Drive via Custom Metadata Types for admin-configurable behavior |
+| Transactional DML | Unit of Work | Use fflib_SObjectUnitOfWork; mind Savepoint DML limits |
+| Add behavior without modification | Decorator | Useful for callout retry/logging wrappers |
+| React to state changes | Observer / **Platform Events** | Platform Events preferred for async, retry-safe decoupling |
+| Queue/undo operations | Command | Validate field names against Schema to prevent SOQL injection |
+| Simplify complex systems | Facade | Useful for `@InvocableMethod` entry points consumed by Flows |
+| Encapsulate business rules | Domain Class | fflib Domain pattern; keeps trigger handlers clean |
+| Consistent method structure | Abstraction Levels | Trigger → Handler → Service → Selector/Domain layers |
+
+---
+
+## Official References
+
+- **Apex Enterprise Patterns (fflib)**: [GitHub](https://github.com/apex-enterprise-patterns/fflib-apex-common)
+- **Trigger Actions Framework**: [GitHub](https://github.com/mitchspano/apex-trigger-actions-framework)
+- **Platform Events Developer Guide**: [Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.platform_events.meta/platform_events/)
+- **Apex Developer Guide**: [Design Patterns](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dev_guide.htm)
+- **Trailhead**: [Apex Enterprise Patterns](https://trailhead.salesforce.com/content/learn/modules/apex_patterns_sl)
+- **Clean Apex Code** by Pablo Gonzalez: [Springer](https://link.springer.com/book/10.1007/979-8-8688-1411-2)

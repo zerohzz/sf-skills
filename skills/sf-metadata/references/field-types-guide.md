@@ -416,3 +416,9 @@ Account.Industry
    - [ ] Expected data volume?
    - [ ] Index needed?
    - [ ] Character limit appropriate?
+
+---
+## Official References
+- **Custom Field Types**: [Salesforce Help](https://help.salesforce.com/s/articleView?id=sf.custom_field_types.htm)
+- **Metadata API**: [Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/)
+- **Trailhead**: [Data Modeling](https://trailhead.salesforce.com/content/learn/modules/data_modeling)

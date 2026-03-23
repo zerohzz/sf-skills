@@ -1377,3 +1377,10 @@ original end date is null (new contracts)."
 - [Testing Guide](./testing-guide.md) - Comprehensive testing strategies
 - [Governance Checklist](./governance-checklist.md) - Security and compliance
 - [XML Gotchas](./xml-gotchas.md) - Common XML pitfalls
+
+---
+## Official References
+- **Flow Builder Guide**: [Salesforce Help](https://help.salesforce.com/s/articleView?id=sf.flow.htm)
+- **Trailhead**: [Build Flows with Flow Builder](https://trailhead.salesforce.com/content/learn/trails/build-flows-with-flow-builder)
+- **Trailhead**: [Automate Business Processes](https://trailhead.salesforce.com/content/learn/trails/automate_business_processes)
+- **Flow Limits**: [Execution Governors](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm)

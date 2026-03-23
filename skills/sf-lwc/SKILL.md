@@ -16,6 +16,35 @@ metadata:
 
 Use this skill when the user needs **Lightning Web Components**: LWC bundles, wire patterns, Apex/GraphQL integration, SLDS 2 styling, accessibility, performance work, or Jest unit tests.
 
+## Core Principles
+
+1. **Base Components First**: Use `lightning-*` base components before building custom HTML. Base components include built-in accessibility, SLDS styling, and dark mode support.
+2. **Reactive Data via Wire**: Prefer `@wire` adapters for data that should re-render automatically. Use imperative Apex only for user-initiated actions.
+3. **Lightning Web Security (LWS) Compliant**: No direct DOM manipulation outside your component's shadow. No `document.querySelector()` across component boundaries.
+4. **SLDS 2 + Dark Mode**: All custom CSS must work with SLDS 2 design tokens and support dark mode. Never hardcode colors.
+5. **Accessible by Default**: Meet WCAG 2.1 AA. Use ARIA attributes, keyboard navigation, and focus management.
+
+## Decision Gates
+
+**AUTO** (proceed without asking):
+- Standard component scaffolding with SLDS
+- Wire adapter usage for LDS operations
+- Jest test generation
+
+**ASK USER** (confirm before proceeding):
+- Data access pattern choice (LDS vs Apex vs GraphQL)
+- Cross-component communication strategy (LMS vs events vs shared state)
+- Custom CSS that deviates from SLDS patterns
+- Components targeting Experience Cloud (different rendering context)
+
+## Operating Modes
+
+- **Quick**: Scaffold component bundle, basic wire/Apex integration.
+- **Standard** (default): Production-grade with SLDS compliance, accessibility, error handling, Jest tests.
+- **Thorough**: Enterprise-grade with performance profiling, LWS audit, full accessibility review, dark mode validation.
+
+---
+
 ## When This Skill Owns the Task
 
 Use `sf-lwc` when the work involves:

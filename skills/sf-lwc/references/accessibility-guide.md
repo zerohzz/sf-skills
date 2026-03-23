@@ -22,6 +22,62 @@ Comprehensive guide to building WCAG 2.1 AA compliant Lightning Web Components.
 
 ---
 
+## SLDS Accessibility: What the Platform Gives You for Free
+
+Before writing custom accessibility code, understand what Salesforce provides out of the box:
+
+### Lightning Base Components Have Built-in ARIA
+
+Lightning base components (`lightning-button`, `lightning-input`, `lightning-datatable`, `lightning-combobox`, etc.) ship with proper ARIA attributes, keyboard navigation, and screen reader support already implemented. You get:
+
+- **`lightning-input`**: Automatic `aria-required`, `aria-invalid`, error announcements, and label association
+- **`lightning-button`**: Correct `role="button"`, focus management, and disabled state handling
+- **`lightning-datatable`**: Full `role="grid"` implementation with arrow-key navigation, sortable column headers, and row selection announcements
+- **`lightning-combobox`**: Complete `role="combobox"` with `aria-expanded`, `aria-activedescendant`, and typeahead support
+
+### SLDS CSS Classes Include Accessibility Patterns
+
+The Salesforce Lightning Design System CSS framework provides accessibility utilities by default:
+
+- `slds-assistive-text` hides content visually while keeping it available to screen readers
+- `slds-assistive-text_focus` makes skip-navigation links visible on focus
+- `slds-has-error` pairs with `aria-invalid` for form validation
+- Component blueprints (modals, tabs, menus) include correct ARIA roles in their markup examples
+
+### The #1 Accessibility Strategy on Salesforce
+
+**Use base components instead of custom HTML whenever possible.** A custom `<div onclick>` button requires you to manually add `role="button"`, `tabindex="0"`, Enter/Space key handling, and focus styles. A `<lightning-button>` gives you all of that for free.
+
+When you must build custom interactive elements, follow the SLDS blueprint markup exactly — it has been audited for WCAG 2.1 AA compliance.
+
+**Reference**: [SLDS Accessibility Overview](https://www.lightningdesignsystem.com/accessibility/overview/)
+
+---
+
+## Lightning Web Security (LWS) and Accessibility
+
+### LWS Replaces Locker Service
+
+Lightning Web Security (LWS) is the current DOM isolation model for LWC, replacing the older Lightning Locker. LWS uses JavaScript sandboxing instead of secure wrappers, which changes how components interact with the DOM and, consequently, how assistive technologies navigate component trees.
+
+### Shadow DOM and Screen Readers
+
+LWC uses synthetic shadow DOM (or native shadow DOM with LWS). This has accessibility implications:
+
+- **Screen readers interact differently with component boundaries** — ARIA `id` references (`aria-labelledby`, `aria-describedby`, `aria-controls`) do not cross shadow DOM boundaries. The referenced element must be within the same shadow root.
+- **`document.activeElement`** returns the host element when focus is inside a shadow root. Use `this.template.activeElement` within your component instead.
+- **Slotted content** maintains its original accessibility tree position, which can cause unexpected reading order for screen readers.
+
+### Use Platform Navigation and Toast APIs
+
+Instead of building custom navigation or notification solutions (which may break across shadow boundaries):
+
+- Use **`lightning/navigation`** (`NavigationMixin`) for page navigation — it integrates with the platform's built-in route announcements
+- Use **`lightning/platformShowToastEvent`** for notifications — toast events are announced to screen readers automatically via the platform's live region
+- Use **`lightning-modal`** (LWC base component) instead of custom modals — it handles focus trapping and `aria-modal` correctly across shadow boundaries
+
+---
+
 ## Accessibility Standards
 
 ### WCAG 2.1 AA Compliance

@@ -17,6 +17,35 @@ metadata:
 
 Use this skill when the user needs **production Apex**: new classes, triggers, selectors, services, async jobs, invocable methods, test classes, or evidence-based review of existing `.cls` / `.trigger` code.
 
+## Core Principles
+
+1. **Governor-Limit Aware**: Every suggestion considers Salesforce execution limits (100 SOQL, 150 DML, 6MB heap, 10s CPU). If a pattern risks hitting limits at scale, flag it.
+2. **Bulk by Default**: All code processes `List<SObject>` — never single records. Test with 200+ records.
+3. **Security First**: `WITH USER_MODE` and `with sharing` are defaults. `without sharing` or `SYSTEM_MODE` require documented justification.
+4. **Evidence-Based**: Reference official Salesforce documentation. Never guess at governor limit values or API behavior.
+5. **Multitenant Awareness**: Your code runs on shared infrastructure. Governor limits exist to protect all tenants — design within them, not around them.
+
+## Decision Gates
+
+**AUTO** (proceed without asking):
+- Apex class/trigger generation following established patterns
+- Test class creation for new or modified code
+- Bulkification fixes for identified anti-patterns
+
+**ASK USER** (confirm before proceeding):
+- Synchronous vs asynchronous architecture choice
+- `without sharing` or `SYSTEM_MODE` usage
+- New trigger framework or handler pattern (when one already exists)
+- Architectural changes affecting multiple classes
+
+## Operating Modes
+
+- **Quick**: Scaffold code fast, skip optimization, minimal error handling. Good for prototyping.
+- **Standard** (default): Production-grade code with full guardrails, security, and testing guidance.
+- **Thorough**: Enterprise-grade with security audit, performance analysis, governor limit calculation at expected data volumes, and cross-skill impact review.
+
+---
+
 ## When This Skill Owns the Task
 
 Use `sf-apex` when the work involves:
@@ -193,6 +222,7 @@ Full guide: [references/troubleshooting.md](references/troubleshooting.md#lsp-ba
 ## Reference Map
 
 ### Start here
+- [references/platform-fundamentals.md](references/platform-fundamentals.md) — multitenant architecture, trigger execution order, async decision matrix
 - [references/patterns-deep-dive.md](references/patterns-deep-dive.md)
 - [references/security-guide.md](references/security-guide.md)
 - [references/bulkification-guide.md](references/bulkification-guide.md)

@@ -999,13 +999,18 @@ DevOps & Tooling        sf-deploy, sf-diagram-mermaid,
 ══════════════════════════════════════════════════════════════════
 ```
 
-**7 specialized agents for team orchestration:**
+**6 specialized agents aligned with Salesforce certification roles:**
 
 ```
-fde-strategist (orchestrator — plans, researches, delegates)
-├── FDE Team:     fde-engineer, fde-experience-specialist
-├── Cross-cutting: fde-qa-engineer, fde-release-engineer
-└── PS Team:      ps-technical-architect, ps-solution-architect
+Declarative & Administration:
+  sf-administrator (Admin / Advanced Admin)
+  sf-app-builder (Platform App Builder)
+  sf-business-analyst (Business Analyst)
+
+Development & Architecture:
+  sf-platform-developer (Platform Developer I & II)
+  sf-technical-architect (Technical Architect / CTA)
+  sf-system-architect (System Architect)
 ```
 
 ### Skill Orchestration

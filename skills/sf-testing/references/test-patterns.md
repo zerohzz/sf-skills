@@ -152,3 +152,9 @@ public class TestDataFactory {
     }
 }
 ```
+
+---
+## Official References
+- **Apex Testing Guide**: [Apex Testing](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm)
+- **Trailhead**: [Apex Testing](https://trailhead.salesforce.com/content/learn/modules/apex_testing)
+- **Test Best Practices**: [Testing Best Practices](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm)
