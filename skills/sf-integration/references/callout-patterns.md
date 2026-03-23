@@ -717,3 +717,10 @@ private class MyCalloutTest {
 - [Main Skill Documentation](../SKILL.md) - sf-integration overview
 - [Named Credentials Templates](../assets/named-credentials/) - Authentication templates
 - [Callout Templates](../assets/callouts/) - Ready-to-use callout patterns
+
+---
+## Official References
+- **Named Credentials Guide**: [Named Credentials](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_named_credentials.htm)
+- **Integration Patterns**: [Integration Patterns and Practices](https://developer.salesforce.com/docs/atlas.en-us.integration_patterns_and_practices.meta/integration_patterns_and_practices/)
+- **Trailhead**: [Apex Integration Services](https://trailhead.salesforce.com/content/learn/modules/apex_integration_services)
+- **Callout Limits**: [Governor Limits for Callouts](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_callouts_timeouts.htm)

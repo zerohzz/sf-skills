@@ -377,6 +377,63 @@ This file contains practical examples of common Salesforce deployment scenarios 
 
 ---
 
+## Test Level Options
+
+Understanding test levels is critical for deployment speed and success:
+
+| Test Level | Flag | When to Use |
+|-----------|------|-------------|
+| NoTestRun | `--test-level NoTestRun` | Non-production sandbox deploys |
+| RunSpecifiedTests | `--test-level RunSpecifiedTests --tests TestClass1,TestClass2` | Targeted validation |
+| RunLocalTests | `--test-level RunLocalTests` | Production deploys (default) |
+| RunAllTestsInOrg | `--test-level RunAllTestsInOrg` | Full regression (slow!) |
+
+**Key rules:**
+- Production deployments **require** at least `RunLocalTests` (75% org-wide coverage minimum)
+- `RunSpecifiedTests` must still meet 75% coverage for deployed classes
+- `NoTestRun` is only valid for sandbox targets — it will be rejected for production
+- `RunAllTestsInOrg` runs managed package tests too, which can add significant time
+
+---
+
+## Check-Only Deployment (Validation)
+
+```bash
+sf project deploy start --target-org production --dry-run --test-level RunLocalTests --wait 30
+# Validates without deploying — use for PRs and CI/CD gates
+```
+
+A successful check-only deployment returns a **job ID** that can be used for a **quick deploy** within 10 days, skipping re-validation:
+
+```bash
+sf project deploy quick --job-id 0Af5g00000XXXXX --target-org production
+```
+
+This is the recommended CI/CD pattern: validate on PR merge, then quick-deploy in the release pipeline.
+
+---
+
+## Rollback Strategy
+
+**Salesforce has NO built-in rollback for metadata deployments.** Once components are deployed, there is no "undo" button.
+
+Recommended rollback strategies:
+
+1. **Re-deploy the previous known-good version from source control** — this is the primary strategy. Tag every production release in git so you can always check out and re-deploy.
+2. **For data changes in Apex**: use `Database.setSavepoint()` and `Database.rollback(sp)` to wrap DML operations in transactions.
+3. **For large data migrations**: maintain a backup export (via `sf data export bulk` or Data Loader) before running destructive operations.
+4. **For destructive metadata changes**: keep a copy of deleted components in a `rollback/` branch or directory before deploying `destructiveChanges.xml`.
+
+---
+
+## Official References
+
+- **Metadata Deploy**: [Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_deploy.htm)
+- **Salesforce DX Guide**: [Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
+- **Trailhead**: [App Development with Salesforce DX](https://trailhead.salesforce.com/content/learn/trails/sfdx_get_started)
+
+---
+
 ## Tips for Successful Deployments
 
 1. **Always validate first** - Use `--dry-run` for production

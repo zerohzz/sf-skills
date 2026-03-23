@@ -16,6 +16,29 @@ metadata:
 
 Use this skill when the user needs **deployment orchestration**: dry-run validation, targeted or manifest-based deploys, CI/CD workflow advice, scratch-org management, failure triage, or safe rollout sequencing for Salesforce metadata.
 
+## Core Principles
+
+1. **Validate Before Deploy**: Always `--dry-run` first. A failed production deploy is disruptive — catch errors in validation.
+2. **No Rollback Exists**: Salesforce metadata deployments cannot be rolled back. Your safety net is source control + re-deploy previous version.
+3. **Dependency Order Matters**: Objects → Permission Sets → Apex → Flows (Draft) → Flows (Activate). Wrong order = deployment failure.
+4. **Test Level Awareness**: Production deploys default to `RunLocalTests`. Choose the right level for the situation — over-testing wastes time, under-testing risks failure.
+5. **Environment Parity**: Keep sandbox configurations as close to production as possible.
+
+## Decision Gates
+
+**AUTO** (proceed without asking):
+- Dry-run validation deploys
+- Sandbox-to-sandbox deploys
+- Scratch org creation for development
+
+**ASK USER** (confirm before proceeding):
+- Production deployment (always confirm target org)
+- Test level selection for production (RunLocalTests vs RunAllTestsInOrg)
+- Destructive changes (field deletion, object removal)
+- Package strategy changes
+
+---
+
 ## When This Skill Owns the Task
 
 Use `sf-deploy` when the work involves:

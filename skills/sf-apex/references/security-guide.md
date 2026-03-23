@@ -74,9 +74,9 @@ for (Account acc : accounts) {
 
 ## CRUD and FLS (Field-Level Security)
 
-### API 62.0: WITH USER_MODE
+### WITH USER_MODE (Recommended Default — API 60.0+)
 
-**Modern approach (API 62.0+)**: Use `WITH USER_MODE` in SOQL to enforce CRUD and FLS automatically.
+**Preferred approach**: Use `WITH USER_MODE` in SOQL to enforce CRUD, FLS, and sharing automatically. Introduced in **API 60.0 (Spring '24)**, this is now the recommended security pattern, replacing `WITH SECURITY_ENFORCED` and manual `Schema.isAccessible()` checks.
 
 ```apex
 // ✅ GOOD: Respects user permissions
@@ -117,9 +117,9 @@ List<Account> accounts = [
 
 ---
 
-### Legacy Approach: Security.stripInaccessible()
+### Alternative: Security.stripInaccessible()
 
-**For pre-62.0 compatibility** or when you need to filter fields dynamically:
+**For pre-API 60.0 compatibility** or when you want to silently strip inaccessible fields instead of throwing an exception:
 
 ```apex
 // Query all fields
@@ -599,11 +599,40 @@ static void testSharingEnforcement() {
 
 ---
 
-## Reference
+## Platform Encryption (Shield)
 
-**Full Documentation**: See `references/` folder for comprehensive guides:
-- `security-guide.md` - Complete security reference (this is an extract)
-- `best-practices.md` - Includes security best practices
-- `code-review-checklist.md` - Security scoring criteria
+For orgs using **Salesforce Shield Platform Encryption**:
+
+```apex
+// Platform Encryption is transparent to Apex — encrypted fields work normally in SOQL
+// HOWEVER: encrypted fields cannot be used in WHERE, ORDER BY, or GROUP BY clauses
+
+// BAD: Encrypted field in WHERE clause — throws runtime error
+// SELECT Id FROM Account WHERE SSN__c = '123-45-6789'  // SSN__c is encrypted
+
+// GOOD: Query by non-encrypted identifier, then filter in Apex
+List<Account> accounts = [
+    SELECT Id, Name, SSN__c
+    FROM Account
+    WHERE External_Id__c = :externalId
+    WITH USER_MODE
+];
+```
+
+**Key Platform Encryption constraints**:
+- Encrypted fields cannot be used in `WHERE`, `ORDER BY`, `GROUP BY`, or `HAVING` clauses
+- Deterministic encryption allows `=` filters but not `LIKE`, `<`, `>`
+- `SOQL aggregate functions` (SUM, AVG) don't work on encrypted fields
+
+---
+
+## Official References
+
+- **Apex Security Guide**: [Enforcing Security](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_security_sharing_chapter.htm)
+- **WITH USER_MODE**: [User Mode Operations](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_enforce_usermode.htm)
+- **Trailhead**: [Apex Security](https://trailhead.salesforce.com/content/learn/modules/apex_security)
+- **Trailhead**: [Data Security](https://trailhead.salesforce.com/content/learn/modules/data_security)
+- **Shield Platform Encryption**: [Implementation Guide](https://developer.salesforce.com/docs/atlas.en-us.securityImplGuide.meta/securityImplGuide/security_pe_overview.htm)
+- **OWASP for Salesforce**: [Secure Coding Guidelines](https://developer.salesforce.com/docs/atlas.en-us.secure_coding_guide.meta/secure_coding_guide/)
 
 **Back to Main**: [SKILL.md](../SKILL.md)

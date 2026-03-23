@@ -17,6 +17,35 @@ metadata:
 
 Use this skill when the user needs **Flow design or Flow XML work**: record-triggered, screen, autolaunched, scheduled, or platform-event Flows, including validation, architecture choices, and safe deployment sequencing.
 
+## Core Principles
+
+1. **Declarative First**: Flow exists so you don't write Apex. Only escalate to Apex when Flow provably cannot handle the requirement (complex logic, callouts, high-performance needs).
+2. **Bulk Safe**: All Flows must handle 200+ records per batch. Before-save Flows process records individually but record-triggered after-save Flows must handle batches.
+3. **Fault Path Required**: Every DML and query element must have a fault connector — silent failures are unacceptable.
+4. **One Flow Per Object Per Trigger Event**: Avoid multiple record-triggered Flows on the same object and event — use subflows for modularity instead.
+5. **Evidence-Based**: Reference Salesforce Flow documentation. Flow governor limits are separate from (and cumulative with) Apex limits in the same transaction.
+
+## Decision Gates
+
+**AUTO** (proceed without asking):
+- Standard record-triggered Flows (field updates, email alerts)
+- Screen Flows for data collection
+- Subflow extraction for reusability
+
+**ASK USER** (confirm before proceeding):
+- Flow vs Apex decision for complex logic
+- Before-save vs After-save choice (impacts what operations are possible)
+- Scheduled Flow design (impacts org limits — max 250K batches/24h)
+- Platform Event-triggered Flow (asynchronous, different transaction context)
+
+## Operating Modes
+
+- **Quick**: Generate Flow XML from requirements, minimal validation.
+- **Standard** (default): Full validation, fault paths, bulk safety review, deployment sequencing.
+- **Thorough**: Enterprise-grade with performance analysis, automation density review, cross-object impact assessment.
+
+---
+
 ## When This Skill Owns the Task
 
 Use `sf-flow` when the work involves:

@@ -17,6 +17,28 @@ metadata:
 
 Use this skill when the user needs **SOQL/SOSL authoring or optimization**: natural-language-to-query generation, relationship queries, aggregates, query-plan analysis, and performance/safety improvements for Salesforce queries.
 
+## Core Principles
+
+1. **Security by Default**: `WITH USER_MODE` on every query unless there's an explicit reason for `SYSTEM_MODE`. This enforces CRUD, FLS, and sharing rules.
+2. **Selectivity Aware**: Queries on objects >200K records MUST use indexed fields in WHERE clauses or the platform will reject them.
+3. **Budget Conscious**: Each transaction has 100 SOQL queries (sync) / 200 (async) and 50,000 row retrieval. Every query consumes from this shared budget.
+4. **Injection Prevention**: Never concatenate user input into SOQL strings. Use bind variables (`:var`) or `String.escapeSingleQuotes()`.
+5. **Relationship Queries Save Budget**: One parent-child subquery is better than two separate queries.
+
+## Decision Gates
+
+**AUTO** (proceed without asking):
+- Standard SOQL generation with `WITH USER_MODE`
+- Relationship query optimization
+- Aggregate query generation
+
+**ASK USER** (confirm before proceeding):
+- `WITH SYSTEM_MODE` usage — must justify why
+- Dynamic SOQL construction (injection risk)
+- Queries on objects suspected to have >1M records (LDV strategy needed)
+
+---
+
 ## When This Skill Owns the Task
 
 Use `sf-soql` when the work involves:

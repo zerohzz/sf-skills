@@ -755,3 +755,9 @@ public class CachedMetadataService {
 - `code-review-checklist.md` - Bulkification scoring criteria
 
 **Back to Main**: [SKILL.md](../SKILL.md)
+
+---
+## Official References
+- **Apex Developer Guide**: [Governor Limits](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_gov_limits.htm)
+- **Trailhead**: [Bulk Apex Triggers](https://trailhead.salesforce.com/content/learn/modules/apex_triggers/apex_triggers_bulk)
+- **Best Practice**: [Trigger Bulkification](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bestpract.htm)

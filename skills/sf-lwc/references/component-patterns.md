@@ -1474,3 +1474,10 @@ public static List<Contact> getContactsWithErrorHandling(Id accountId) {
 - [PICKLES Framework (Salesforce Ben)](https://www.salesforceben.com/the-ideal-framework-for-architecting-salesforce-lightning-web-components/)
 - [LWC Recipes (GitHub)](https://github.com/trailheadapps/lwc-recipes)
 - [James Simone - Composable Modal](https://www.jamessimone.net/blog/joys-of-apex/lwc-composable-modal/)
+
+---
+## Official References
+- **LWC Developer Guide**: [Lightning Web Components](https://developer.salesforce.com/docs/platform/lwc/guide/)
+- **SLDS**: [Lightning Design System](https://www.lightningdesignsystem.com/)
+- **Trailhead**: [Lightning Web Components Basics](https://trailhead.salesforce.com/content/learn/modules/lightning-web-components-basics)
+- **Lightning Message Service**: [LMS Developer Guide](https://developer.salesforce.com/docs/platform/lwc/guide/use-message-channel.html)

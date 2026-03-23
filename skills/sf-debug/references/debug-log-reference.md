@@ -326,3 +326,9 @@ System: DEBUG
 | `sf data delete record --sobject ApexLog --record-id <id>` | Delete individual log record |
 
 See [cli-commands.md](./cli-commands.md) for detailed command reference.
+
+---
+## Official References
+- **Debug Log Reference**: [Debug Log Categories](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_debugging_debug_log.htm)
+- **Trailhead**: [Find and Fix Bugs](https://trailhead.salesforce.com/content/learn/modules/find-and-fix-bugs-with-apex-replay-debugger)
+- **Apex Replay Debugger**: [VS Code Extension](https://developer.salesforce.com/tools/vscode/en/apex/replay-debugger)
