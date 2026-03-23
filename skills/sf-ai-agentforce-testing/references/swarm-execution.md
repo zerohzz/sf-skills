@@ -124,16 +124,16 @@ TaskCreate(subject="Deploy+Run {suite_name}", description="sf agent test create 
 ```
 
 ☐ **Step 3: Spawn workers** (max 3, batch suites if > 3)
-Workers are `fde-qa-engineer` agents. Each worker:
+Workers are `sf-platform-developer` agents (or any agent with sf-testing skill). Each worker:
 1. Deploys its assigned suite(s) via `sf agent test create --spec`
 2. Runs via `sf agent test run --api-name`
 3. Polls results via `sf agent test results --job-id`
 4. SendMessage to leader with results summary
 
 ```
-Task(subagent_type="fde-qa-engineer", team_name="cli-test-{agent_name}",
+Task(subagent_type="sf-platform-developer", team_name="cli-test-{agent_name}",
      name="test-worker-1", prompt=CLI_WORKER_PROMPT)
-Task(subagent_type="fde-qa-engineer", team_name="cli-test-{agent_name}",
+Task(subagent_type="sf-platform-developer", team_name="cli-test-{agent_name}",
      name="test-worker-2", prompt=CLI_WORKER_PROMPT)
 ```
 

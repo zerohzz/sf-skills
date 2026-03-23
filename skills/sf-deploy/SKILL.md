@@ -37,6 +37,12 @@ Use this skill when the user needs **deployment orchestration**: dry-run validat
 - Destructive changes (field deletion, object removal)
 - Package strategy changes
 
+## Operating Modes
+
+- **Quick**: Deploy with `--dry-run` validation only, minimal diagnostics.
+- **Standard** (default): Full validation → deploy with appropriate test level → post-deploy verification.
+- **Thorough**: Pre-deploy dependency analysis, environment comparison, full regression test suite, post-deploy smoke tests, deployment rollback plan documented.
+
 ---
 
 ## When This Skill Owns the Task

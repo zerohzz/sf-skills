@@ -37,6 +37,12 @@ Use this skill when the user needs **SOQL/SOSL authoring or optimization**: natu
 - Dynamic SOQL construction (injection risk)
 - Queries on objects suspected to have >1M records (LDV strategy needed)
 
+## Operating Modes
+
+- **Quick**: Generate the simplest correct query, minimal optimization.
+- **Standard** (default): Full selectivity analysis, security mode, relationship optimization, governor budget awareness.
+- **Thorough**: Query plan analysis, LDV strategy evaluation, index recommendation, cross-transaction budget calculation.
+
 ---
 
 ## When This Skill Owns the Task

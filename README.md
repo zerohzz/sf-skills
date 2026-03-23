@@ -142,10 +142,10 @@ python3 ~/.claude/sf-skills-install.py --profile delete old
 │   ├── sf-apex/SKILL.md
 │   ├── sf-flow/SKILL.md
 │   └── ... (30 more)
-├── agents/                    # 7 FDE + PS agents
-│   ├── fde-strategist.md
-│   ├── fde-engineer.md
-│   └── ... (5 more)
+├── agents/                    # 6 Salesforce certification-aligned agents
+│   ├── sf-administrator.md
+│   ├── sf-platform-developer.md
+│   └── ... (4 more)
 ├── hooks/                     # Shared hook system and registry
 │   ├── scripts/
 │   └── skills-registry.json
@@ -293,40 +293,25 @@ Hooks provide **advisory feedback** — they inform but don't block operations.
 
 ## 🤖 Agent Team
 
-Seven specialized Claude Code agents for Salesforce implementations, installed to `~/.claude/agents/`.
+Six specialized Claude Code agents aligned with **Salesforce certification roles**, installed to `~/.claude/agents/`.
 
-### FDE Team (Agent-Focused)
+### Declarative & Administration
 
-| Agent | Role | Mode | Key Skills |
-|-------|------|------|------------|
-| **fde-strategist** | Orchestrator — plans, researches, delegates | `plan` | sf-ai-agentforce, sf-diagram-mermaid |
-| **fde-engineer** | Agent config, metadata, Apex, Agent Scripts | `acceptEdits` | sf-ai-agentforce, sf-ai-agentscript |
-| **fde-experience-specialist** | Conversation design, persona, UX, LWC | `acceptEdits` | sf-ai-agentforce-persona, sf-lwc |
+| Agent | Certification Alignment | Model | Key Skills |
+|-------|------------------------|-------|------------|
+| **sf-administrator** | Administrator / Advanced Administrator | sonnet | sf-permissions, sf-flow, sf-data, sf-metadata |
+| **sf-app-builder** | Platform App Builder | sonnet | sf-metadata, sf-flow, sf-permissions |
+| **sf-business-analyst** | Business Analyst | sonnet | sf-metadata, sf-flow, sf-diagram-mermaid |
 
-### Cross-Cutting (Serve Both Teams)
+### Development & Architecture
 
-| Agent | Role | Mode | Key Skills |
-|-------|------|------|------------|
-| **fde-qa-engineer** | Testing (agent + platform), debug, observability | `acceptEdits` | sf-testing, sf-ai-agentforce-testing |
-| **fde-release-engineer** | Deployment, Connected Apps, CI/CD | `acceptEdits` | sf-deploy, sf-connected-apps |
+| Agent | Certification Alignment | Model | Key Skills |
+|-------|------------------------|-------|------------|
+| **sf-platform-developer** | Platform Developer I & II | opus | sf-apex, sf-soql, sf-lwc, sf-testing, sf-debug |
+| **sf-technical-architect** | Technical Architect (CTA) | opus | sf-apex, sf-integration, sf-connected-apps, sf-soql, sf-deploy + 2 more |
+| **sf-system-architect** | System Architect | opus | sf-integration, sf-connected-apps, sf-deploy, sf-data, sf-datacloud, sf-permissions |
 
-### PS Team (Platform Infrastructure)
-
-| Agent | Role | Mode | Key Skills |
-|-------|------|------|------------|
-| **ps-technical-architect** | Apex, integrations, data, LWC, performance | `acceptEdits` | sf-apex, sf-integration, sf-lwc + 5 more |
-| **ps-solution-architect** | Metadata, Flows, permissions, diagrams | `acceptEdits` | sf-metadata, sf-flow, sf-permissions + 2 more |
-
-### Hierarchy
-
-```
-fde-strategist (orchestrator — plans, researches, delegates)
-├── FDE: fde-engineer, fde-experience-specialist
-├── QA/Release: fde-qa-engineer, fde-release-engineer
-└── PS: ps-technical-architect, ps-solution-architect
-```
-
-The strategist spawns up to 4 concurrent workers via `Task()`. PS agents have `WebSearch` and `WebFetch` for self-directed Salesforce docs lookup.
+All agents have `WebSearch` and `WebFetch` for self-directed Salesforce documentation lookup.
 
 <a id="skill-architecture"></a>
 
